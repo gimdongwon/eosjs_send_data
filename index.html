@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/eosjs-ecc@4.0.4/lib/eosjs-ecc.min.js"
+    integrity="sha512-dYFDmK/d9r3/NCp6toLtfkwOjSMRBaEzaGAx1tfRItC0nsI0hVLERk05iNBQR7uDNI7ludYhcBI4vUiFHdjsTQ=="
+    crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const ecc = eosjs_ecc;
+        ecc.randomKey().then(privateKey => {
+        console.log('Private Key:\t', privateKey) // wif
+        console.log('Public Key:\t', ecc.privateToPublic(privateKey)) // EOSkey...
+        const PrivateKey = privateKey;
+        const PublicKey = ecc.privateToPublic(privateKey)
+        let data = null;
+        
+        const xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === this.DONE) {
+            console.log(this.responseText);
+        }
+        });
+        console.log(xhr)
+        xhr.open("claimrewards", "https:/eoseoul.io");
+        xhr.setRequestHeader("string", "application/x-www-form-urlencoded; charset=UTF-8");
+        
+        xhr.send(data);
+        data.split(":");
+        data.map(item=>{
+            ecc.sign(item, PrivateKey)
+        })
+        // data하고 Public키를 날려주면됨
+    })
+    </script>
+</body>
+</html>
