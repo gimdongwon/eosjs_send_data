@@ -20,10 +20,8 @@
 
         let xhr = new XMLHttpRequest();
         let claimMessage, prevState = JSON.parse(JSON.stringify(xhr.response));
-
-        // 30분에 1번씩 실행
-        setInterval(function() {
-        ecc.randomKey().then(privateKey => {
+        
+        const claimRewardMsg = () => ecc.randomKey().then(privateKey => {
         console.log('Private Key:\t', privateKey) // wif
         console.log('Public Key:\t', ecc.privateToPublic(privateKey)) // EOSkey...
         const PrivateKey = privateKey;
@@ -38,10 +36,14 @@
                 if(contactState.act.name === "claimrewards" && contactState !== prevState){
                     claimMessage = contactState.block_time + ":" + contactState.trx_id + ":" + contactState.producer_block_id;
                     console.log("해당 문자열 :" + claimMessage + `\n`, "서명 : " + ecc.sign(claimMessage, PrivateKey) + `\n`, "공용 키 : " + PublicKey)
+                    prevState = presentState;
                 }
             }
         });
-    })}, 2160000)
+    })
+        // 30분에 1번씩 실행
+        claimRewardMsg();
+        setInterval(function(){claimRewardMsg()}, 2160000)
     
     </script>
 </body>
