@@ -7,35 +7,38 @@
     <script src="https://cdn.jsdelivr.net/npm/eosjs-ecc@4.0.4/lib/eosjs-ecc.min.js"
     integrity="sha512-dYFDmK/d9r3/NCp6toLtfkwOjSMRBaEzaGAx1tfRItC0nsI0hVLERk05iNBQR7uDNI7ludYhcBI4vUiFHdjsTQ=="
     crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/eosio/eosjs@4ea39c037b8016b1f5197654b2c32e29192125c4/dist-web/eosjs-debug.js" integrity="sha384-0nvZuWr1W0MSN5pWlMpm25rItkptSPOA2c6HuvizniLkx5BLn7R9t0LGukX+SCqS" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/eosio/eosjs@4ea39c037b8016b1f5197654b2c32e29192125c4/dist-web/eosjs-jsonrpc-debug.js" integrity="sha384-AkoBqsaf2yj+I0ly591fGwiCOSFzS072ucVxKyKD5xFnlc2mwOjESUTXa4qSEpS/" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/eosio/eosjs@4ea39c037b8016b1f5197654b2c32e29192125c4/dist-web/eosjs-jssig-debug.js" integrity="sha384-Jj9y5tybhn4VqzCIAXaiNoY1VXpduwh6xgAR4zuSZSSLUACfQG2QLJ+sbI+Youww" crossorigin="anonymous"></script>
     <title>Document</title>
 </head>
 <body>
     <script>
         const ecc = eosjs_ecc;
+        const Eos = eosjs;
+        let data = {account_name: 'eoseouldotio'}
+
+        let xhr = new XMLHttpRequest();
+        let claimMessage, prevState = JSON.parse(JSON.stringify(xhr.response));
+
         ecc.randomKey().then(privateKey => {
         console.log('Private Key:\t', privateKey) // wif
         console.log('Public Key:\t', ecc.privateToPublic(privateKey)) // EOSkey...
         const PrivateKey = privateKey;
         const PublicKey = ecc.privateToPublic(privateKey)
-        let data = null;
-        
-        const xhr = new XMLHttpRequest();
-
+        xhr.open("POST", "https://eos.greymass.com:443/v1/history/get_actions");
+        xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+        xhr.send(JSON.stringify(data))
         xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === this.DONE) {
-            console.log(this.responseText);
-        }
+            if (this.readyState === this.DONE) {
+                let presentState = JSON.parse(this.response)
+                let contactState = presentState.actions[0].action_trace;
+                if(contactState.act.name === "claimrewards" && contactState !== prevState){
+                    claimMessage = contactState.block_time + ":" + contactState.trx_id + ":" + contactState.producer_block_id;
+                    console.log("해당 문자열 :" + claimMessage + `\n`, "서명 : " + ecc.sign(claimMessage, PrivateKey) + `\n`, "공용 키 : " + PublicKey)
+                }
+            }
         });
-        console.log(xhr)
-        xhr.open("claimrewards", "https:/eoseoul.io");
-        xhr.setRequestHeader("string", "application/x-www-form-urlencoded; charset=UTF-8");
-        
-        xhr.send(data);
-        data.split(":");
-        data.map(item=>{
-            ecc.sign(item, PrivateKey)
-        })
-        // data하고 Public키를 날려주면됨
     })
     </script>
 </body>
