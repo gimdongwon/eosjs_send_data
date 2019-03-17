@@ -21,6 +21,8 @@
         let xhr = new XMLHttpRequest();
         let claimMessage, prevState = JSON.parse(JSON.stringify(xhr.response));
 
+        // 30분에 1번씩 실행
+        setInterval(function() {
         ecc.randomKey().then(privateKey => {
         console.log('Private Key:\t', privateKey) // wif
         console.log('Public Key:\t', ecc.privateToPublic(privateKey)) // EOSkey...
@@ -39,7 +41,8 @@
                 }
             }
         });
-    })
+    })}, 2160000)
+    
     </script>
 </body>
 </html>
