@@ -22,13 +22,11 @@
         let claimMessage, prevState = JSON.parse(JSON.stringify(xhr.response));
         
         const claimRewardMsg = () => ecc.randomKey().then(privateKey => {
-        console.log('Private Key:\t', privateKey) // wif
-        console.log('Public Key:\t', ecc.privateToPublic(privateKey)) // EOSkey...
         const PrivateKey = privateKey;
         const PublicKey = ecc.privateToPublic(privateKey)
+        console.log(PrivateKey, PublicKey)
         xhr.open("POST", "https://eos.greymass.com:443/v1/history/get_actions");
         xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-        xhr.send(JSON.stringify(data))
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === this.DONE) {
                 let presentState = JSON.parse(this.response)
@@ -40,8 +38,10 @@
                 }
             }
         });
+        xhr.send(JSON.stringify(data))
     })
         // 30분에 1번씩 실행
+        // 일단 1번 실행
         claimRewardMsg();
         setInterval(function(){claimRewardMsg()}, 2160000)
     

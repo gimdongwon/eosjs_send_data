@@ -8,7 +8,7 @@ contract에 claimreewards 액션이 발생하면 block_time, block_id, trx_id를
 
 ## 남은 과제
 1. 행아웃 채팅으로 보내주기
-2. ~~30분에 한번씩 발생하기~~ => 처음 한번 실행해준다음에 돌리고 싶다.
+2. ~~30분에 한번씩 발생하기 => 처음 한번 실행해준다음에 돌리고 싶다.~~
 
 ## 어려웠던 점
 
@@ -16,3 +16,15 @@ contract에 claimreewards 액션이 발생하면 block_time, block_id, trx_id를
 2. 불러온 actions를 단순히 JSON.stringfy하니 전체가 문자열이 되어서 접근할 수가 없었다. 다시한번 JSON.parse()로 객체로 만들어서 접근하니 내마음대로 다룰 수가 있었다.
 3. 이전의 상태와 비교를 해서 claimrewards가 연속 두번 발생하였을 때의 경우도 생각을 하였는데 이전의 상태와 비교하는 방법을 택하였다.
 4. github issue
+
+## 현재 사항
+
+아직 claimrewards가 매일 새벽 2:28분 경에 발생하여서 claimrewards action을 테스트해보지는 못했지만
+
+그외의 action에서는 성공을 하였으며 18일 오전부터 4시간 동안 테스팅한 결과 잘 발생하고 있는 사진입니다.
+
+사진은 랜덤으로 발생된 PrivateKey, PublicKey 목록입니다.
+
+30분에 한번씩 발생시켰습니다.
+
+![proof.png](./proof.png)
